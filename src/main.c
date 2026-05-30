@@ -14,9 +14,9 @@ int	main(int argc, char **argv)
 
 	init_prog(&a);
 	if (argc < 2)
-		error_out(a, ERR_NOARGS, NULL);
+		error_out(&a, ERR_NOARGS, NULL);
 	if (argc > 2)
-		error_out(a, ERR_MANYARGS, NULL);
+		error_out(&a, ERR_MANYARGS, NULL);
 	parse_data_from_file(&a, argv[1]); // Exits by itself in case of error
-	exit_prog(0);
+	exit_prog(&a, 0);
 }

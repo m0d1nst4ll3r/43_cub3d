@@ -5,14 +5,18 @@
 
 #include "mlx.h"
 #include "libft.h"
-#include <unistd.h> // write, read, open
-#include <stdio.h> // printf
-#include <fcntl.h> // open
+#include <math.h>	// M_PI
+#include <errno.h>	// errno
+#include <string.h>	// strerror
+#include <unistd.h>	// write, read, open
+#include <stdio.h>	// printf
+#include <fcntl.h>	// open
 
 // ================================== MACROS ===================================
 
 // Colors
 # define RED			"\e[0;31m"
+# define GRN			"\e[0;32m"
 # define YEL			"\e[0;33m"
 # define RES			"\e[0m"
 
@@ -25,13 +29,15 @@
 # define COLOR_C_STR	"C"
 
 // Errors - Custom
-# define ERR_NOARGS		"Not enough arguments\nUsage: ./cub3d your_map.cub"
-# define ERR_MANYARGS	"Too many arguments\nUsage: ./cub3d your_map.cub"
+# define ERR_NOARGS		"Not enough arguments\n" GRN "Usage" RES ":\
+ ./cub3d your_map.cub"
+# define ERR_MANYARGS	"Too many arguments\n" GRN "Usage" RES ":\
+ ./cub3d your_map.cub"
 # define ERR_BADNAME	"Map filename must end in .cub and name cannot be empty"
-# define ERR_MAPELEMS	"Map does not contain all required textures and/or \
-colors (NO, SO, WE, EA, F, C)"
+# define ERR_MAPELEMS	"Map does not contain all required textures and/or\
+ colors (NO, SO, WE, EA, F, C)"
 # define ERR_FEWELEM	"Line is missing corresponding value (texture file or\
-color)"
+ color)"
 # define ERR_MANYELEM	"Too many values in this line"
 # define ERR_BADTEX		"Could not open texture file"
 # define ERR_BADCOLOR	"Bad color format, expected R,G,B each between 0 and\
@@ -40,6 +46,7 @@ color)"
 # define ERR_NOSPAWN	"Missing player spawn point"
 # define ERR_MANYSPAWN	"Found multiple player spawn points"
 # define ERR_NOWALL		"An open tile is not completely surrounded by walls"
+
 // Errors - Syscall
 # define ERR_OPEN		"Could not open file"
 # define ERR_READ		"Read/malloc error while reading map file"
@@ -49,8 +56,8 @@ color)"
 
 typedef struct s_file_contents
 {
-	char			*line;
-	struct s_file	*next;
+	char					*line;
+	struct s_file_contents	*next;
 }	t_file_contents;
 
 typedef enum e_map_elem
@@ -161,8 +168,8 @@ void	parse_map_elems(t_all *a);
 void	parse_map_grid(t_all *a);
 void	buffer_map_grid(t_all *a);
 // Parsing - sub helpers called in parse_map_elems
-int		read_texture(t_all *a, e_map_elem elem_type);
-int		read_color(t_all *a, e_map_elem elem_type);
+int		read_texture(t_all *a, t_map_elem elem_type);
+int		read_color(t_all *a, t_map_elem elem_type);
 // Parsing - sub helper called in parse_map_grid
 void	fill_grid(t_all *a, t_file_contents *list);
 

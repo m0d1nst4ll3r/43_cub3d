@@ -46,5 +46,5 @@ void	parse_map_grid(t_all *a)
 	if (!a->game.map.data)
 		error_out(a, ERR_MALLOC, NULL);
 	alloc_grid(a);
-	fill_grid(a);
+	fill_grid(a, a->file.contents);
 }

@@ -34,12 +34,12 @@ static void	check_and_fill_tile(t_all *a, int x, int y, char c)
 		{
 			if (a->game.player.x)
 				error_parse(a, ERR_MANYSPAWN, NULL);
-			a->game.player.angle = get_start_angle();
+			a->game.player.angle = get_start_angle(c);
 			a->game.player.x = x + 0.5;
 			a->game.player.y = y + 0.5;
 		}
 		a->game.map.grid[y][x] = TILE_OPEN;
-		if (check_open_tile(a->game.map.grid, x, y))
+		if (check_open_tile(a, x, y))
 			error_parse(a, ERR_NOWALL, NULL);
 	}
 	else
@@ -72,12 +72,13 @@ void	fill_grid(t_all *a, t_file_contents *list)
 		i = 0;
 		while (x < a->game.map.width)
 		{
-			if (a->file.contents[i] && a->file.contents[i] != '\n')
-				check_and_fill_tile(a, x, y, a->file.contents[i++]);
+			if (list->line[i] && list->line[i] != '\n')
+				check_and_fill_tile(a, x, y, list->line[i++]);
 			else
 				a->game.map.grid[y][x] = TILE_VOID;
 			x++;
 		}
+		list = list->next;
 		a->file.i++;
 		y++;
 	}

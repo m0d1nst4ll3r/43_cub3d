@@ -16,8 +16,8 @@ void	parse_data_from_file(t_all *a, char *filename)
 		i++;
 	if (i < 5 || filename[i - 1] != 'b' || filename[i - 2] != 'u'
 			|| filename[i - 3] != 'c' || filename[i - 4] != '.')
-		error_out(*a, ERR_BADNAME, NULL);
-	a->file.fd = open(filename, RD_ONLY);
+		error_out(a, ERR_BADNAME, NULL);
+	a->file.fd = open(filename, O_RDONLY);
 	if (a->file.fd == -1)
 		error_out(a, ERR_OPEN, filename);
 	parse_map_elems(a); // NO SO WE EA F C, exits by itself

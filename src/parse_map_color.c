@@ -23,7 +23,7 @@ static int	get_color(char *s, int *to_fill)
 	return (0);
 }
 
-int	read_color(t_all *a, e_map_elem elem_type)
+int	read_color(t_all *a, t_map_elem elem_type)
 {
 	if (elem_type == COLOR_F && a->game.map.color_f != -1
 		|| elem_type == COLOR_C && a->game.map.color_c != -1)

@@ -42,6 +42,6 @@ static void	cleanup_mlx(t_mlx *mlx)
 void	cleanup_prog(t_all *a)
 {
 	cleanup_file(&a->file);
-	cleanup_map(a->mlx.ptr, &a->map);
+	cleanup_map(a->mlx.ptr, &a->game.map);
 	cleanup_mlx(&a->mlx);
 }
