@@ -5,14 +5,20 @@
 
 #include "mlx.h"
 #include "libft.h"
-#include <math.h>	// M_PI
 #include <errno.h>	// errno
 #include <string.h>	// strerror
-#include <unistd.h>	// write, read, open
+#include <unistd.h>	// write, read, exit
 #include <stdio.h>	// printf
-#include <fcntl.h>	// open
+#include <fcntl.h>	// open, close
+#include <stdlib.h>	// malloc, free
+#include <math.h>	// M_PI
 
 // ================================== MACROS ===================================
+
+// MLX
+# define WIN_X			800
+# define WIN_Y			600
+# define WIN_NAME		"cub3d"
 
 // Colors
 # define RED			"\e[0;31m"
@@ -34,6 +40,7 @@
 # define ERR_MANYARGS	"Too many arguments\n" GRN "Usage" RES ":\
  ./cub3d your_map.cub"
 # define ERR_BADNAME	"Map filename must end in .cub and name cannot be empty"
+# define ERR_MLX		"Failed initializing minilibx"
 # define ERR_MAPELEMS	"Map does not contain all required textures and/or\
  colors (NO, SO, WE, EA, F, C)"
 # define ERR_FEWELEM	"Line is missing corresponding value (texture file or\
@@ -41,7 +48,7 @@
 # define ERR_MANYELEM	"Too many values in this line"
 # define ERR_BADTEX		"Could not open texture file"
 # define ERR_BADCOLOR	"Bad color format, expected R,G,B each between 0 and\
-255"
+ 255"
 # define ERR_MAPNEWLINE	"Empty lines inside of the level map are not accepted"
 # define ERR_NOSPAWN	"Missing player spawn point"
 # define ERR_MANYSPAWN	"Found multiple player spawn points"

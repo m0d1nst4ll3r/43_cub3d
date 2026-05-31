@@ -11,11 +11,11 @@ static int	get_color(char *s, int *to_fill)
 	i = ft_atox(s, NULL, &r, sizeof(r) | ATOX_U | ATOX_TR);
 	if (i < 0 || s[i++] != ',')
 		return (1);
-	ret = ft_atox(s + i, NULL, &r, sizeof(r) | ATOX_U | ATOX_TR);
+	ret = ft_atox(s + i, NULL, &g, sizeof(g) | ATOX_U | ATOX_TR);
 	i += ret;
 	if (ret < 0 || s[i++] != ',')
 		return (1);
-	i = ft_atox(s + i, NULL, &r, sizeof(r) | ATOX_U | ATOX_TR);
+	ret = ft_atox(s + i, NULL, &b, sizeof(b) | ATOX_U | ATOX_TR);
 	i += ret;
 	if (ret < 0 || s[i])
 		return (1);

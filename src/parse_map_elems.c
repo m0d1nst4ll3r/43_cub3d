@@ -23,7 +23,7 @@ static t_map_elem	check_line_elem_id(t_all *a)
 	else
 	{
 		ft_fprintf(2, RED "Error" RES ": " YEL "line %d" RES ": \
-				Unrecognized element identifier '%s'\n", a->file.i, a->file.split_line[0]);
+Unrecognized element identifier '%s'\n", a->file.i, a->file.split_line[0]);
 		exit_prog(a, 1);
 	}
 }
@@ -72,6 +72,8 @@ void	parse_map_elems(t_all *a)
 			if (!a->file.split_line)
 				error_out(a, ERR_MALLOC, NULL);
 			read_single_elem(a); // Exits by itself depending on error
+			free_strs(a->file.split_line);
+			a->file.split_line = NULL;
 		}
 		else
 			free(line);

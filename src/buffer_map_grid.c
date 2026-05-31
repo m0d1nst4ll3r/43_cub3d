@@ -4,7 +4,7 @@ static int	line_is_empty(t_all *a, char *line)
 {
 	if (ft_str_is_empty(line))
 	{	
-		if (!a->file.contents)
+		if (a->file.contents)
 			error_parse(a, ERR_MAPNEWLINE, NULL); // This fires also for trailing newlines
 		return (1);
 	}

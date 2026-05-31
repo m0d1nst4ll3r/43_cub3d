@@ -1,0 +1,11 @@
+NO ./textures/Brick1.xpm
+SO ./textures/Brick1.xpm
+WE ./textures/Brick1.xpm
+EA ./textures/Brick1.xpm
+F 220,100,0
+C 225,30,0
+111 10
+1N1 11
+101111
+100001
+111111

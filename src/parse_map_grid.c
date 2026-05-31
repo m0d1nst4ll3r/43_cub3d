@@ -7,7 +7,7 @@ static void	get_map_dimensions(t_file_contents *list, int *width, int *height)
 
 	while (list)
 	{
-		*height++;
+		(*height)++;
 		i = 0;
 		while (list->line[i + 1] && list->line[i + 1] != '\n')
 			i++;

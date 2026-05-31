@@ -22,10 +22,23 @@ static int	check_open_tile(t_all *a, int x, int y)
 		|| a->game.map.grid[y - 1][x + 1] == TILE_VOID);
 }
 
+static int	check_void_tile(t_all *a, int x, int y)
+{
+	return ((y && a->game.map.grid[y - 1][x] == TILE_OPEN)
+			|| (x && a->game.map.grid[y][x - 1] == TILE_OPEN)
+			|| (x && y && a->game.map.grid[y - 1][x - 1] == TILE_OPEN)
+			|| (x != a->game.map.width - 1
+				&& y && a->game.map.grid[y - 1][x + 1] == TILE_OPEN));
+}
+
 static void	check_and_fill_tile(t_all *a, int x, int y, char c)
 {
 	if (c == ' ')
+	{
 		a->game.map.grid[y][x] = TILE_VOID;
+		if (check_void_tile(a, x, y))
+			error_parse(a, ERR_NOWALL, NULL);
+	}
 	else if (c == '1')
 		a->game.map.grid[y][x] = TILE_WALL;
 	else if (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W')
@@ -75,7 +88,11 @@ void	fill_grid(t_all *a, t_file_contents *list)
 			if (list->line[i] && list->line[i] != '\n')
 				check_and_fill_tile(a, x, y, list->line[i++]);
 			else
+			{
 				a->game.map.grid[y][x] = TILE_VOID;
+				if (check_void_tile(a, x, y))
+					error_parse(a, ERR_NOWALL, NULL);
+			}
 			x++;
 		}
 		list = list->next;

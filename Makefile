@@ -6,7 +6,7 @@
 #    By: rpohlen <rpohlen@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/20 14:37:51 by rpohlen           #+#    #+#              #
-#    Updated: 2026/05/31 00:11:21 by rapohlen         ###   ########.fr        #
+#    Updated: 2026/05/31 02:06:06 by rapohlen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,10 @@ $(LIBFT):
 $(BUILDDIR)/%.o:	%.c | $(LIB)
 					@mkdir -p $(@D)
 					$(CC) $(CFLAGS) -c -o $@ $<
+
+# Valgrind memory test
+valgrind:			$(NAME)
+					valgrind -q --leak-check=full --show-leak-kinds=all --track-fds=yes ./$(NAME) $(MAP)
 
 # Cleanup
 clean:

@@ -8,6 +8,7 @@ static int	get_texture(t_mlx *mlx, t_img *img, char *filename)
 	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->llen, &img->endian);
 	if (!img->addr)
 		return (1);
+	errno = 0;
 	return (0);
 }
 
