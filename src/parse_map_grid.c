@@ -40,7 +40,7 @@ static void	alloc_grid(t_all *a)
 void	parse_map_grid(t_all *a)
 {
 	get_map_dimensions(a->file.contents, &a->game.map.width,
-			&a->game.map.height);
+		&a->game.map.height);
 	a->game.map.data = malloc(sizeof(*a->game.map.data) * a->game.map.width
 			* a->game.map.height);
 	if (!a->game.map.data)

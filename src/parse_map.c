@@ -15,7 +15,7 @@ void	parse_data_from_file(t_all *a, char *filename)
 	while (filename[i])
 		i++;
 	if (i < 5 || filename[i - 1] != 'b' || filename[i - 2] != 'u'
-			|| filename[i - 3] != 'c' || filename[i - 4] != '.')
+		|| filename[i - 3] != 'c' || filename[i - 4] != '.')
 		error_out(a, ERR_BADNAME, NULL);
 	a->file.fd = open(filename, O_RDONLY);
 	if (a->file.fd == -1)

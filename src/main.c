@@ -1,10 +1,7 @@
 #include "cub3d.h"
 
-static void	init_mlx(t_all *a)
+static void	init_mlx_win(t_all *a)
 {
-	a->mlx.ptr = mlx_init();
-	if (!a->mlx.ptr)
-		error_out(a, ERR_MLX, NULL);
 	a->mlx.win = mlx_new_window(a->mlx.ptr, WIN_X, WIN_Y, WIN_NAME);
 	if (!a->mlx.win)
 		error_out(a, ERR_MLX, NULL);
@@ -15,6 +12,15 @@ static void	init_mlx(t_all *a)
 			&a->mlx.img.bpp, &a->mlx.img.llen, &a->mlx.img.endian);
 	a->mlx.img.width = WIN_X;
 	a->mlx.img.height = WIN_Y;
+	errno = 0;
+}
+
+static void	init_mlx(t_all *a)
+{
+	a->mlx.ptr = mlx_init();
+	if (!a->mlx.ptr)
+		error_out(a, ERR_MLX, NULL);
+	errno = 0;
 }
 
 static void	init_prog(t_all *a)
@@ -25,7 +31,6 @@ static void	init_prog(t_all *a)
 	a->game.map.color_f = -1;
 	a->game.map.color_c = -1;
 	init_mlx(a);
-	errno = 0;
 }
 
 int	main(int argc, char **argv)
@@ -38,5 +43,6 @@ int	main(int argc, char **argv)
 	if (argc > 2)
 		error_out(&a, ERR_MANYARGS, NULL);
 	parse_data_from_file(&a, argv[1]); // Exits by itself in case of error
+	init_mlx_win(&a);
 	exit_prog(&a, 0);
 }

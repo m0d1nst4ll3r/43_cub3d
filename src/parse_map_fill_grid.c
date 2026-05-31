@@ -12,8 +12,9 @@ static float	get_start_angle(char c)
 		return (M_PI * 3 / 2);
 }
 
-static int	check_open_tile(t_all *a, int x, int y)
+static int	add_open_tile(t_all *a, int x, int y)
 {
+	a->game.map.grid[y][x] = TILE_OPEN;
 	return (!x || !y
 		|| x == a->game.map.width - 1 || y == a->game.map.height - 1
 		|| a->game.map.grid[y][x - 1] == TILE_VOID
@@ -22,8 +23,9 @@ static int	check_open_tile(t_all *a, int x, int y)
 		|| a->game.map.grid[y - 1][x + 1] == TILE_VOID);
 }
 
-static int	check_void_tile(t_all *a, int x, int y)
+static int	add_void_tile(t_all *a, int x, int y)
 {
+	a->game.map.grid[y][x] = TILE_VOID;
 	return ((y && a->game.map.grid[y - 1][x] == TILE_OPEN)
 			|| (x && a->game.map.grid[y][x - 1] == TILE_OPEN)
 			|| (x && y && a->game.map.grid[y - 1][x - 1] == TILE_OPEN)
@@ -33,12 +35,8 @@ static int	check_void_tile(t_all *a, int x, int y)
 
 static void	check_and_fill_tile(t_all *a, int x, int y, char c)
 {
-	if (c == ' ')
-	{
-		a->game.map.grid[y][x] = TILE_VOID;
-		if (check_void_tile(a, x, y))
-			error_parse(a, ERR_NOWALL, NULL);
-	}
+	if (c == ' ' && add_void_tile(a, x, y))
+		error_parse(a, ERR_NOWALL, NULL);
 	else if (c == '1')
 		a->game.map.grid[y][x] = TILE_WALL;
 	else if (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W')
@@ -51,11 +49,10 @@ static void	check_and_fill_tile(t_all *a, int x, int y, char c)
 			a->game.player.x = x + 0.5;
 			a->game.player.y = y + 0.5;
 		}
-		a->game.map.grid[y][x] = TILE_OPEN;
-		if (check_open_tile(a, x, y))
+		if (add_open_tile(a, x, y))
 			error_parse(a, ERR_NOWALL, NULL);
 	}
-	else
+	else if (c != ' ')
 	{
 		ft_fprintf(2, RED "Error" RES ": " YEL "line %d" RES ": \
 Invalid map tile identifier '%c'\n", a->file.i, c);
@@ -87,12 +84,8 @@ void	fill_grid(t_all *a, t_file_contents *list)
 		{
 			if (list->line[i] && list->line[i] != '\n')
 				check_and_fill_tile(a, x, y, list->line[i++]);
-			else
-			{
-				a->game.map.grid[y][x] = TILE_VOID;
-				if (check_void_tile(a, x, y))
-					error_parse(a, ERR_NOWALL, NULL);
-			}
+			else if (add_void_tile(a, x, y))
+				error_parse(a, ERR_NOWALL, NULL);
 			x++;
 		}
 		list = list->next;

@@ -3,15 +3,15 @@
 
 // ================================= INCLUDES ==================================
 
-#include "mlx.h"
-#include "libft.h"
-#include <errno.h>	// errno
-#include <string.h>	// strerror
-#include <unistd.h>	// write, read, exit
-#include <stdio.h>	// printf
-#include <fcntl.h>	// open, close
-#include <stdlib.h>	// malloc, free
-#include <math.h>	// M_PI
+# include "mlx.h"
+# include "libft.h"
+# include <errno.h>	// errno
+# include <string.h>	// strerror
+# include <unistd.h>	// write, read, exit
+# include <stdio.h>	// printf
+# include <fcntl.h>	// open, close
+# include <stdlib.h>	// malloc, free
+# include <math.h>	// M_PI
 
 // ================================== MACROS ===================================
 
@@ -35,9 +35,9 @@
 # define COLOR_C_STR	"C"
 
 // Errors - Custom
-# define ERR_NOARGS		"Not enough arguments\n" GRN "Usage" RES ":\
+# define ERR_NOARGS		"Not enough arguments\n\e[0;32mUsage\e[0m:\
  ./cub3d your_map.cub"
-# define ERR_MANYARGS	"Too many arguments\n" GRN "Usage" RES ":\
+# define ERR_MANYARGS	"Too many arguments\n\e[0;32mUsage\e[0m:\
  ./cub3d your_map.cub"
 # define ERR_BADNAME	"Map filename must end in .cub and name cannot be empty"
 # define ERR_MLX		"Failed initializing minilibx"
@@ -74,7 +74,7 @@ typedef enum e_map_elem
 	TEX_WE,
 	TEX_EA,
 	COLOR_F,
-	COLOR_C
+	COLOR_C,
 }	t_map_elem;
 
 typedef struct s_file
@@ -86,25 +86,25 @@ typedef struct s_file
 }	t_file;
 
 // Contains image either for texture or for main window
-typedef struct  s_img
+typedef struct s_img
 {
-    void    *ptr;
-    char    *addr;
-    int     bpp; //bits per pixel
-    int     llen; //line length
-    int     endian;
-    int     width;
-    int     height;
-}   t_img;
+	void	*ptr;
+	char	*addr;
+	int		bpp; //bits per pixel
+	int		llen; //line length
+	int		endian;
+	int		width;
+	int		height;
+}	t_img;
 
 // May not be needed, TODO remove if not needed
 typedef struct s_color
 {
-    int             val;
-    unsigned char   r;
-    unsigned char   g;
-    unsigned char   b;
-}   t_color;
+	int				val;
+	unsigned char	r;
+	unsigned char	g;
+	unsigned char	b;
+}	t_color;
 
 typedef enum e_map_tile_char
 {
@@ -114,37 +114,36 @@ typedef enum e_map_tile_char
 	MAP_N = 'N',
 	MAP_S = 'S',
 	MAP_E = 'E',
-	MAP_W = 'W'
+	MAP_W = 'W',
 }	t_map_tile_char;
 
 typedef enum e_map_tile
 {
-    TILE_VOID, // ' '
-    TILE_WALL, // '1'
-    TILE_OPEN // '0' or 'N' 'W' 'E' 'S'
-	// Can add more, e.g MAP_HDOOR and MAP_VDOOR
-}   t_map_tile;
+	TILE_VOID,	// ' '
+	TILE_WALL,	// '1'
+	TILE_OPEN,	// '0' or 'N' 'W' 'E' 'S'
+}	t_map_tile;	// Can add more, e.g MAP_HDOOR and MAP_VDOOR
 
 typedef struct s_map
 {
-    t_map_tile  *data;
+	t_map_tile	*data;
 	t_map_tile	**grid;
-    int         width;
-    int         height;
+	int			width;
+	int			height;
 	t_img		tex_no;
 	t_img		tex_so;
 	t_img		tex_we;
 	t_img		tex_ea;
 	int			color_c; // May swap to t_color if rgb values needed
 	int			color_f;
-}   t_map;
+}	t_map;
 
 typedef struct s_player
 {
-    float   x;
-    float   y;
-    float   angle;
-}   t_player;
+	float	x;
+	float	y;
+	float	angle;
+}	t_player;
 
 typedef struct s_mlx
 {

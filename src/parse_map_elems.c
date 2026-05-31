@@ -3,7 +3,7 @@
 static int	got_all_elems(t_map *map)
 {
 	return (map->color_f != -1 && map->color_c != -1 && map->tex_no.ptr
-			&& map->tex_so.ptr && map->tex_we.ptr && map->tex_ea.ptr);
+		&& map->tex_so.ptr && map->tex_we.ptr && map->tex_ea.ptr);
 }
 
 static t_map_elem	check_line_elem_id(t_all *a)

@@ -27,7 +27,7 @@ int	read_color(t_all *a, t_map_elem elem_type)
 {
 	if (elem_type == COLOR_F && a->game.map.color_f != -1
 		|| elem_type == COLOR_C && a->game.map.color_c != -1)
-			error_parse_duplicate(a, a->file.split_line[0]);
+		error_parse_duplicate(a, a->file.split_line[0]);
 	if ((elem_type == COLOR_F
 			&& get_color(a->file.split_line[1], &a->game.map.color_f))
 		|| (elem_type == COLOR_C
