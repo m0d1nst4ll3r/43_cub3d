@@ -6,7 +6,7 @@
 #    By: rpohlen <rpohlen@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/20 14:37:51 by rpohlen           #+#    #+#              #
-#    Updated: 2026/05/31 02:06:06 by rapohlen         ###   ########.fr        #
+#    Updated: 2026/05/31 16:46:10 by rapohlen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ MLX_REPO			= https://github.com/42paris/minilibx-linux
 
 # Compiler settings
 CC					= cc
-CFLAGS				= -g -MMD -MP $(addprefix -I,$(INCDIR))
+CFLAGS				= -Wall -Wextra -Werror -g -MMD -MP $(addprefix -I,$(INCDIR))
 
 # Make settings
 MAKEFLAGS			+= --no-print-directory

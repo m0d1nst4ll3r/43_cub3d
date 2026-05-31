@@ -5,13 +5,13 @@
 
 # include "mlx.h"
 # include "libft.h"
-# include <errno.h>	// errno
+# include <errno.h>		// errno
 # include <string.h>	// strerror
 # include <unistd.h>	// write, read, exit
-# include <stdio.h>	// printf
-# include <fcntl.h>	// open, close
+# include <stdio.h>		// printf
+# include <fcntl.h>		// open, close
 # include <stdlib.h>	// malloc, free
-# include <math.h>	// M_PI
+# include <math.h>		// M_PI
 
 // ================================== MACROS ===================================
 
@@ -97,15 +97,6 @@ typedef struct s_img
 	int		height;
 }	t_img;
 
-// May not be needed, TODO remove if not needed
-typedef struct s_color
-{
-	int				val;
-	unsigned char	r;
-	unsigned char	g;
-	unsigned char	b;
-}	t_color;
-
 typedef enum e_map_tile_char
 {
 	MAP_SPACE = ' ',
@@ -174,8 +165,8 @@ void	parse_map_elems(t_all *a);
 void	parse_map_grid(t_all *a);
 void	buffer_map_grid(t_all *a);
 // Parsing - sub helpers called in parse_map_elems
-int		read_texture(t_all *a, t_map_elem elem_type);
-int		read_color(t_all *a, t_map_elem elem_type);
+void	read_texture(t_all *a, t_map_elem elem_type);
+void	read_color(t_all *a, t_map_elem elem_type);
 // Parsing - sub helper called in parse_map_grid
 void	fill_grid(t_all *a, t_file_contents *list);
 

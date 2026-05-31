@@ -8,7 +8,7 @@ static float	get_start_angle(char c)
 		return (M_PI / 2);
 	else if (c == 'W')
 		return (M_PI);
-	else if (c == 'S')
+	else
 		return (M_PI * 3 / 2);
 }
 

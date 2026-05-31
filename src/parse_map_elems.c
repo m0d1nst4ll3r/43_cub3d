@@ -26,6 +26,7 @@ static t_map_elem	check_line_elem_id(t_all *a)
 Unrecognized element identifier '%s'\n", a->file.i, a->file.split_line[0]);
 		exit_prog(a, 1);
 	}
+	return (0);
 }
 
 static void	check_line_elem_count(t_all *a)

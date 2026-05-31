@@ -13,7 +13,7 @@ static int	get_texture(t_mlx *mlx, t_img *img, char *filename)
 	return (0);
 }
 
-int	read_texture(t_all *a, t_map_elem elem_type)
+void	read_texture(t_all *a, t_map_elem elem_type)
 {
 	if ((elem_type == TEX_NO && a->game.map.tex_no.ptr)
 		|| (elem_type == TEX_SO && a->game.map.tex_so.ptr)
