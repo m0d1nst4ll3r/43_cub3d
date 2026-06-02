@@ -6,7 +6,7 @@
 #    By: rpohlen <rpohlen@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/20 14:37:51 by rpohlen           #+#    #+#              #
-#    Updated: 2026/05/31 16:46:10 by rapohlen         ###   ########.fr        #
+#    Updated: 2026/06/02 14:27:35 by rapohlen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,10 @@ CFILES				= main.c \
 					  parse_map_texture.c \
 					  parse_map_grid.c \
 					  parse_map_fill_grid.c \
-					  buffer_map_grid.c
+					  buffer_map_grid.c \
+					  mlx_hooks.c \
+					  init.c \
+					  render.c
 SRCDIR				= src
 SRC					= $(addprefix $(SRCDIR)/, $(CFILES))
 
@@ -50,8 +53,8 @@ LIBFT_REPO			= https://github.com/m0d1nst4ll3r/43_mylibft
 MLX_REPO			= https://github.com/42paris/minilibx-linux
 
 # Compiler settings
-CC					= cc
-CFLAGS				= -Wall -Wextra -Werror -g -MMD -MP $(addprefix -I,$(INCDIR))
+CC					= clang
+CFLAGS				= -O3 -Wall -Wextra -Werror -g -MMD -MP $(addprefix -I,$(INCDIR))
 
 # Make settings
 MAKEFLAGS			+= --no-print-directory

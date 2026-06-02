@@ -5,6 +5,7 @@
 
 # include "mlx.h"
 # include "libft.h"
+# include <stdbool.h>		// bool type
 # include <errno.h>		// errno
 # include <string.h>	// strerror
 # include <unistd.h>	// write, read, exit
@@ -12,20 +13,26 @@
 # include <fcntl.h>		// open, close
 # include <stdlib.h>	// malloc, free
 # include <math.h>		// M_PI
+# include <X11/X.h>		// macros for hooks
+# include <sys/time.h>	// gettimeofday
 
 // ================================== MACROS ===================================
 
 // MLX
-# define WIN_X			800
-# define WIN_Y			600
-# define WIN_NAME		"cub3d"
+# define WIN_X				800
+# define WIN_Y				600
+# define WIN_NAME			"cub3d"
+# define REFRESH_RATE_USEC	16666
 
-// Game - minimap
+// Game - Minimap
 # define COLOR_VOID		0x0
 # define COLOR_WALL		0x555555
 # define COLOR_OPEN		0xaaaaaa
 # define COLOR_PLAYER	0xff0000
 # define RADIUS_PLAYER	2
+
+// Game - Player
+# define PLAYER_SPEED	0.1 // Will also depend on key repeat speed
 
 // Colors
 # define RED			"\e[0;31m"
@@ -40,6 +47,30 @@
 # define TEX_EA_STR		"EA"
 # define COLOR_F_STR	"F"
 # define COLOR_C_STR	"C"
+
+// Keys
+# define KEY_Q				'q'
+# define KEY_E				'e'
+# define KEY_W				'w'
+# define KEY_A				'a'
+# define KEY_S				's'
+# define KEY_D				'd'
+# define KEY_R				'r'
+# define KEY_F				'f'
+# define KEY_ESC			65307
+# define KEY_UP				65362
+# define KEY_DOWN			65364
+# define KEY_LEFT			65361
+# define KEY_RIGHT			65363
+# define KEY_LCTRL			65507
+# define KEY_LSHIFT			65505
+
+// Mouse buttons
+# define BTN_LMB			1
+# define BTN_MMB			2
+# define BTN_RMB			3
+# define BTN_MWU			4
+# define BTN_MWD			5
 
 // Errors - Custom
 # define ERR_NOARGS		"Not enough arguments\n\e[0;32mUsage\e[0m:\
@@ -156,28 +187,49 @@ typedef struct s_game
 	t_map		map;
 }	t_game;
 
+typedef struct s_time
+{
+	struct timeval	current;
+	struct timeval	last_refresh;
+	struct timeval	last_fps;
+	unsigned int	frame_count;
+	unsigned int	loop_count;
+	bool			img_need_redraw;
+}	t_time;
+
 typedef struct s_all
 {
 	t_game	game;
 	t_mlx	mlx;
 	t_file	file;
+	t_time	time;
 }	t_all;
 
 // ================================ PROTOTYPES =================================
 
-// Parsing - main func
+// ======= Parsing =======
 void	parse_data_from_file(t_all *a, char *filename);
-// Parsing - helpers called in main func
+// Helpers called in main func
 void	parse_map_elems(t_all *a);
 void	parse_map_grid(t_all *a);
 void	buffer_map_grid(t_all *a);
-// Parsing - sub helpers called in parse_map_elems
+// Sub helpers called in parse_map_elems
 void	read_texture(t_all *a, t_map_elem elem_type);
 void	read_color(t_all *a, t_map_elem elem_type);
-// Parsing - sub helper called in parse_map_grid
+// Sub helper called in parse_map_grid
 void	fill_grid(t_all *a, t_file_contents *list);
 
-// Cleanup
+// ======= Hooks =======
+void	set_hooks(t_all *a);
+
+// ======= Rendering =======
+void	redraw_img(t_all *a);
+
+// ======= Init =======
+void	init_prog(t_all *a);
+void	init_mlx_win(t_all *a);
+
+// ======= Cleanup =======
 void	cleanup_prog(t_all *a);
 // Exit
 void	exit_prog(t_all *a, unsigned char exitval);
