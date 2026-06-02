@@ -20,6 +20,13 @@
 # define WIN_Y			600
 # define WIN_NAME		"cub3d"
 
+// Game - minimap
+# define COLOR_VOID		0x0
+# define COLOR_WALL		0x555555
+# define COLOR_OPEN		0xaaaaaa
+# define COLOR_PLAYER	0xff0000
+# define RADIUS_PLAYER	2
+
 // Colors
 # define RED			"\e[0;31m"
 # define GRN			"\e[0;32m"
