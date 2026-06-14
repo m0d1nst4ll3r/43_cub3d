@@ -25,19 +25,19 @@ void	display_grid(t_map_tile	**grid, int width, int height)
 	}
 }
 
+// Dead files for rewrite WIP:
+// - mlx_hooks.c (contains all hooks/game logic WIP)
+// - render.c (contains all render logic WIP)
 int	main(int argc, char **argv)
 {
-	t_all	a;
+	t_cub	cub;
 
-	init_prog(&a);
-	if (argc < 2)
-		error_out(&a, ERR_NOARGS, NULL);
-	if (argc > 2)
-		error_out(&a, ERR_MANYARGS, NULL);
-	parse_data_from_file(&a, argv[1]); // Exits by itself in case of error
-	display_grid(a.game.map.grid, a.game.map.width, a.game.map.height);
-	init_mlx_win(&a);
-	set_hooks(&a);
-	mlx_loop(a.mlx.ptr);
-	exit_prog(&a, 0);
+	/* 1 */ init_data(&cub); // Inits all data points so we can exit cleanly, cannot fail
+	/* 2 */ check_args(&cub, argc, argv); // Checks right amount of args and right format, can error
+	/* 3 */ buffer_file(&cub, argv[1]); // Attempts to open file, buffer it into a chained list, and close it, can error
+	/* 4 */ parse_file(&cub); // Reads file data, can error
+	/* 5 */ init_mlx(&cub); // Init MLX and opens texture files, can still error - only creates display after opening XPMs
+	/* 6 */ init_hooks(&cub); // Sets all keyboard, mouse, clientmessage, loop hooks
+//	/* 7 */ mlx_loop(cub.mlx.ptr); // Engages mlx loop, game starts
+	exit_prog(&cub, 0);
 }

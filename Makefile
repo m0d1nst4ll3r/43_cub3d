@@ -6,25 +6,26 @@
 #    By: rpohlen <rpohlen@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/20 14:37:51 by rpohlen           #+#    #+#              #
-#    Updated: 2026/06/02 14:27:35 by rapohlen         ###   ########.fr        #
+#    Updated: 2026/06/12 19:42:34 by rapohlen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Source files
 CFILES				= main.c \
-					  free.c \
-					  cleanup.c \
-					  exit_error.c \
-					  parse_map.c \
-					  parse_map_color.c \
-					  parse_map_elems.c \
-					  parse_map_texture.c \
-					  parse_map_grid.c \
-					  parse_map_fill_grid.c \
-					  buffer_map_grid.c \
-					  mlx_hooks.c \
 					  init.c \
-					  render.c
+					  init_mlx.c \
+					  check_args.c \
+					  buffer_file.c \
+					  parse_file.c \
+					  parse_elems.c \
+					  parse_color.c \
+					  parse_texture.c \
+					  parse_map.c \
+					  parse_map_fill.c \
+					  error.c \
+					  exit.c \
+					  cleanup.c \
+					  free.c
 SRCDIR				= src
 SRC					= $(addprefix $(SRCDIR)/, $(CFILES))
 

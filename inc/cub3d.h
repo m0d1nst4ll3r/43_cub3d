@@ -5,7 +5,7 @@
 
 # include "mlx.h"
 # include "libft.h"
-# include <stdbool.h>		// bool type
+# include <stdbool.h>	// bool type
 # include <errno.h>		// errno
 # include <string.h>	// strerror
 # include <unistd.h>	// write, read, exit
@@ -77,7 +77,9 @@
  ./cub3d your_map.cub"
 # define ERR_MANYARGS	"Too many arguments\n\e[0;32mUsage\e[0m:\
  ./cub3d your_map.cub"
-# define ERR_BADNAME	"Map filename must end in .cub and name cannot be empty"
+# define ERR_INVNAME	"Invalid map name. A valid '*.cub' file is required"
+# define ERR_VISNAME	"Invalid map name. A visible '*.cub' file is required"
+# define ERR_EMPFILE	"File is empty"
 # define ERR_MLX		"Failed initializing minilibx"
 # define ERR_MAPELEMS	"Map does not contain all required textures and/or\
  colors (NO, SO, WE, EA, F, C)"
@@ -87,7 +89,8 @@
 # define ERR_BADTEX		"Could not open texture file"
 # define ERR_BADCOLOR	"Bad color format, expected R,G,B each between 0 and\
  255"
-# define ERR_MAPNEWLINE	"Empty lines inside of the level map are not accepted"
+# define ERR_NOMAP		"Missing map"
+# define ERR_MAPNEWLINE	"Found empty line in map"
 # define ERR_NOSPAWN	"Missing player spawn point"
 # define ERR_MANYSPAWN	"Found multiple player spawn points"
 # define ERR_NOWALL		"An open tile is not completely surrounded by walls"
@@ -99,12 +102,6 @@
 
 // ================================== STRUCTS ==================================
 
-typedef struct s_file_contents
-{
-	char					*line;
-	struct s_file_contents	*next;
-}	t_file_contents;
-
 typedef enum e_map_elem
 {
 	TEX_NO,
@@ -114,26 +111,6 @@ typedef enum e_map_elem
 	COLOR_F,
 	COLOR_C,
 }	t_map_elem;
-
-typedef struct s_file
-{
-	t_file_contents	*contents; // Only used during map grid parsing (after elems) - can rename this "file buffer" or "grid buffer"
-	char			**split_line; // Contains line elems (normally only 2)
-	int				i; // Parse line index
-	int				fd;
-}	t_file;
-
-// Contains image either for texture or for main window
-typedef struct s_img
-{
-	void	*ptr;
-	char	*addr;
-	int		bpp; //bits per pixel
-	int		llen; //line length
-	int		endian;
-	int		width;
-	int		height;
-}	t_img;
 
 typedef enum e_map_tile_char
 {
@@ -153,26 +130,17 @@ typedef enum e_map_tile
 	TILE_OPEN,	// '0' or 'N' 'W' 'E' 'S'
 }	t_map_tile;	// Can add more, e.g MAP_HDOOR and MAP_VDOOR
 
-typedef struct s_map
+// Contains image either for texture or for main window
+typedef struct s_img
 {
-	t_map_tile	*data;
-	t_map_tile	**grid;
-	int			width;
-	int			height;
-	t_img		tex_no;
-	t_img		tex_so;
-	t_img		tex_we;
-	t_img		tex_ea;
-	int			color_c; // May swap to t_color if rgb values needed
-	int			color_f;
-}	t_map;
-
-typedef struct s_player
-{
-	float	x;
-	float	y;
-	float	angle;
-}	t_player;
+	void	*ptr;
+	char	*addr;
+	int		bpp; //bits per pixel
+	int		llen; //line length
+	int		endian;
+	int		width;
+	int		height;
+}	t_img;
 
 typedef struct s_mlx
 {
@@ -181,11 +149,36 @@ typedef struct s_mlx
 	t_img	img;
 }	t_mlx;
 
-typedef struct s_game
+typedef struct s_parse
 {
-	t_player	player;
-	t_map		map;
-}	t_game;
+	t_file	*file;
+	t_file	*head; // File reading head
+	char	**split_line;
+	int		i;
+	char	*tex_no;
+	char	*tex_so;
+	char	*tex_we;
+	char	*tex_ea;
+}	t_parse;
+
+typedef struct s_cub
+{
+	t_mlx		mlx;
+	t_parse		parse;
+	t_map_tile	*map; // 1D map
+	t_map_tile	**grid; // 2D map (virtual)
+	int			width;
+	int			height;
+	t_img		tex_no;
+	t_img		tex_so;
+	t_img		tex_we;
+	t_img		tex_ea;
+	int			color_c;
+	int			color_f;
+	float		plx;
+	float		ply;
+	float		plr;
+}	t_cub;
 
 typedef struct s_time
 {
@@ -197,48 +190,49 @@ typedef struct s_time
 	bool			img_need_redraw;
 }	t_time;
 
-typedef struct s_all
-{
-	t_game	game;
-	t_mlx	mlx;
-	t_file	file;
-	t_time	time;
-}	t_all;
-
 // ================================ PROTOTYPES =================================
 
-// ======= Parsing =======
-void	parse_data_from_file(t_all *a, char *filename);
-// Helpers called in main func
-void	parse_map_elems(t_all *a);
-void	parse_map_grid(t_all *a);
-void	buffer_map_grid(t_all *a);
-// Sub helpers called in parse_map_elems
-void	read_texture(t_all *a, t_map_elem elem_type);
-void	read_color(t_all *a, t_map_elem elem_type);
-// Sub helper called in parse_map_grid
-void	fill_grid(t_all *a, t_file_contents *list);
+// ==========================
+// ========== Init ==========
+// ==========================
+void	check_args(t_cub *cub, int argc, char **argv);
+void	init_data(t_cub *cub);
+void	init_mlx(t_cub *cub);
 
-// ======= Hooks =======
-void	set_hooks(t_all *a);
+// ==========================
+// ========== Parse =========
+// ==========================
+void	buffer_file(t_cub *cub, char *file);
+void	parse_file(t_cub *cub);
+void	parse_elems(t_cub *cub);
+void	parse_map(t_cub *cub);
+// Parse elems helpers
+void	parse_color(t_cub *cub, t_map_elem elem_type);
+void	parse_texture(t_cub *cub, t_map_elem elem_type);
+// Parse map helper
+void	parse_map_fill(t_cub *cub, t_file *file);
 
-// ======= Rendering =======
-void	redraw_img(t_all *a);
+// ==========================
+// ======= Game Logic =======
+// ==========================
+void	init_hooks(t_cub *cub);
 
-// ======= Init =======
-void	init_prog(t_all *a);
-void	init_mlx_win(t_all *a);
+// ==========================
+// ========= Render =========
+// ==========================
+void	redraw_img(t_cub *cub);
 
-// ======= Cleanup =======
-void	cleanup_prog(t_all *a);
+// ==========================
+// ========= Cleanup ========
+// ==========================
+void	cleanup_prog(t_cub *cub);
 // Exit
-void	exit_prog(t_all *a, unsigned char exitval);
+void	exit_prog(t_cub *cub, unsigned char exitval);
 // Error
-void	error_parse_duplicate(t_all *a, char *s);
-void	error_parse(t_all *a, char *s1, char *s2);
-void	error_out(t_all *a, char *s1, char *s2);
+void	error_parse_duplicate(t_cub *cub, char *s);
+void	error_parse(t_cub *cub, char *s1, char *s2);
+void	error_out(t_cub *cub, char *s1, char *s2);
 // Free
-void	free_file_contents(t_file_contents *file);
 void	free_strs(char **s);
 
 #endif /* CUB3D_H */

@@ -15,22 +15,21 @@ static int	get_color(char *s, int *to_fill)
 	i += ret;
 	if (ret < 0 || s[i++] != ',')
 		return (1);
-	ret = ft_atox(s + i, NULL, &b, sizeof(b) | ATOX_U | ATOX_TR);
-	i += ret;
-	if (ret < 0 || s[i])
+	ret = ft_atox(s + i, NULL, &b, sizeof(b) | ATOX_U);
+	if (ret < 0)
 		return (1);
 	*to_fill = b + (g << 8) + (r << 16);
 	return (0);
 }
 
-void	read_color(t_all *a, t_map_elem elem_type)
+void	parse_color(t_cub *cub, t_map_elem elem_type)
 {
-	if ((elem_type == COLOR_F && a->game.map.color_f != -1)
-		|| (elem_type == COLOR_C && a->game.map.color_c != -1))
-		error_parse_duplicate(a, a->file.split_line[0]);
+	if ((elem_type == COLOR_F && cub->color_f != -1)
+		|| (elem_type == COLOR_C && cub->color_c != -1))
+		error_parse_duplicate(cub, cub->parse.split_line[0]);
 	if ((elem_type == COLOR_F
-			&& get_color(a->file.split_line[1], &a->game.map.color_f))
+			&& get_color(cub->parse.split_line[1], &cub->color_f))
 		|| (elem_type == COLOR_C
-			&& get_color(a->file.split_line[1], &a->game.map.color_c)))
-		error_parse(a, ERR_BADCOLOR, NULL);
+			&& get_color(cub->parse.split_line[1], &cub->color_c)))
+		error_parse(cub, ERR_BADCOLOR, NULL);
 }
